@@ -1,0 +1,30 @@
+schema_version = "1.0.0"
+
+id = "mcp_for_blender_pro"
+version = "1.0.0"
+name = "mcp-for-blender-pro"
+tagline = "AI chat and built-in MCP server for OpenCode, Claude and Cursor"
+maintainer = "anujasid"
+type = "add-on"
+website = "https://github.com/anujasid/blender-ai-mcp-addon"
+
+tags = ["3D View", "Object", "Development", "Scene", "User Interface"]
+
+blender_version_min = "4.2.0"
+
+license = ["SPDX:MIT"]
+copyright = [
+  "2026 anujasid",
+  "2025 Siddharth Ahuja",
+]
+
+[permissions]
+network = "Talk to AI providers, Poly Haven and local MCP clients"
+files = "Save screenshots, renders and downloaded assets"
+
+[build]
+paths_exclude_pattern = [
+  "__pycache__/",
+  "*.pyc",
+  ".*",
+]

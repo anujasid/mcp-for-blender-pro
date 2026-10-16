@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Blender Pro Studio</title>
+<style>
+:root{color-scheme:dark;--bg:#111319;--panel:#191c24;--line:#2b303d;--muted:#989faf;--accent:#b6f36b}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#edf0f5;font:14px system-ui,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;background:#262b36;color:#edf0f5;border:1px solid var(--line);border-radius:10px;padding:10px 15px}button:hover{border-color:var(--accent)}button.primary{background:var(--accent);color:#162108;border:0;font-weight:700}header{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;border-bottom:1px solid var(--line)}.brand{display:flex;gap:13px;align-items:center;font-size:18px;font-weight:700}.logo{background:var(--accent);color:#142108;border-radius:12px;padding:10px}small,.muted{color:var(--muted)}.badge{font-size:11px;letter-spacing:1px;border:1px solid var(--line);padding:5px 8px;border-radius:6px;color:var(--accent)}main{display:grid;grid-template-columns:210px minmax(350px,1fr) minmax(300px,.85fr);height:calc(100vh - 76px)}nav{padding:25px 16px;border-right:1px solid var(--line)}nav button{width:100%;text-align:left;margin-bottom:9px;background:transparent}nav .active{background:#242e20;color:var(--accent)}.section{font-size:10px;color:var(--muted);letter-spacing:2px;margin:25px 12px 14px}.chat{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line)}.heading{padding:25px 28px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}h2{font-size:17px;margin:0 0 7px}#messages{flex:1;overflow:auto;padding:25px 28px}.empty{margin:65px auto;max-width:420px}.empty h1{font-size:32px;line-height:1.2;letter-spacing:-1px}.empty p{color:var(--muted);line-height:1.8}.suggestions{display:grid;gap:10px;margin-top:25px}.message{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;padding:16px 18px;border-radius:13px;background:var(--panel);margin-bottom:16px}.message.user{background:#273222;border:1px solid #3c5030;margin-left:25px}.message.tool{font:12px ui-monospace,monospace;border-left:2px solid var(--accent);color:#bdc6d7}.message.error{border:1px solid #de7474}.role{font-size:10px;color:var(--muted);letter-spacing:1.5px;margin-bottom:7px;text-transform:uppercase}.composer{padding:18px 25px;border-top:1px solid var(--line)}textarea{width:100%;resize:none;background:var(--panel);border:1px solid var(--line);border-radius:12px;color:inherit;padding:16px;min-height:90px;outline:none}textarea:focus{border-color:var(--accent)}.actions{display:flex;justify-content:space-between;align-items:center;margin-top:12px}.right{padding:25px;overflow:auto}.live{display:flex;justify-content:space-between;align-items:center}.dot{color:var(--accent)}.viewport{position:relative;background:#20242d;border:1px solid var(--line);border-radius:15px;overflow:hidden;margin:20px 0;min-height:220px;display:flex;align-items:center;justify-content:center}.viewport img{width:100%;display:block}.card{padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-top:18px}.objects{max-height:230px;overflow:auto}.object{padding:10px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.approval{border:1px solid var(--accent);padding:18px;border-radius:12px;margin-bottom:15px}.approval pre{white-space:pre-wrap;max-height:200px;overflow:auto;font-size:12px}dialog{background:var(--panel);color:inherit;border:1px solid var(--line);border-radius:20px;padding:30px;width:480px}dialog::backdrop{background:#000a}label{display:block;color:var(--muted);margin-top:20px}input,select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:12px;color:inherit;margin-top:8px}#error{color:#ff9c9c;font-size:12px}footer{color:var(--muted);font-size:11px;margin-top:18px;line-height:1.7}@media(max-width:1050px){main{grid-template-columns:80px 1fr 340px}nav .label,nav .section,nav footer{display:none}nav button{text-align:center}}@media(max-width:780px){main{grid-template-columns:1fr;height:auto}.right,nav{display:none}.chat{height:calc(100vh - 76px)}}
+</style>
+<header><div class="brand"><span class="logo">B /</span> Blender Pro <span class="badge">STUDIO</span></div><div><span class="dot">●</span> <span id="connection">Connecting to Blender</span> &nbsp; <button id="settingsButton">Settings</button></div></header>
+<main><nav><button class="active">✦ <span class="label">Creative assistant</span></button><button id="clear">＋ <span class="label">New conversation</span></button><div class="section">WORKSPACE</div><button id="refresh">◉ <span class="label">Refresh viewport</span></button><button id="settingsNav">⚙ <span class="label">AI connection</span></button><footer>Built for Blender.<br>Your scene, your control.<br><br>Changes requiring permission pause until you approve.</footer></nav>
+<section class="chat"><div class="heading"><div><h2>Make something great.</h2><small id="model">Configure your AI connection</small></div><span class="badge" id="status">READY</span></div><div id="messages"><div class="empty"><span class="badge">YOUR CREATIVE WORKSPACE</span><h1>From an idea<br>to your next scene.</h1><p>Describe what you want to create. Watch Blender update, review each operation, and keep building.</p><div class="suggestions"><button data-prompt="Create a gold sphere next to the cube">◌ Create a gold sphere</button><button data-prompt="Inspect the scene and suggest a studio lighting setup">☀ Plan a studio lighting setup</button><button data-prompt="List the objects in my scene and describe their materials">▦ Explore this scene</button></div></div></div><div class="composer"><textarea id="input" placeholder="Describe your next creation…" aria-label="Message"></textarea><div id="error" role="alert"></div><div class="actions"><small>Enter to send · Shift + Enter for a new line</small><div><button id="cancel">Stop</button> <button id="send" class="primary">Send ↗</button></div></div></div></section>
+<aside class="right"><div class="live"><div><h2>Scene preview</h2><small id="scene">Blender viewport</small></div><span class="badge">● LIVE</span></div><div class="viewport"><img id="preview" alt="Live Blender viewport" hidden><span id="previewHint" class="muted">Waiting for viewport…</span></div><small>Live snapshots · refreshes every 3 seconds</small><div class="card"><h2>Activity</h2><p id="activity" class="muted">Ready for your next idea.</p><small id="tools"></small></div><div class="card"><h2>Scene collection</h2><div id="objects" class="objects"></div></div><footer id="version"></footer></aside></main>
+<dialog id="settings"><h2>AI connection</h2><p class="muted">Connect your model to this Blender workspace.</p><form id="settingsForm"><label>Provider<select id="provider"><option value="anthropic">Anthropic Claude</option><option value="openai">OpenAI</option><option value="gemini">Google Gemini</option><option value="openrouter">OpenRouter</option><option value="ollama">Ollama</option><option value="custom">OpenAI-compatible / LM Studio</option><option value="opencode">OpenCode Zen API</option></select></label><label>Model<input id="modelInput" required placeholder="Model identifier"></label><label>API key<input id="key" type="password" placeholder="Leave blank to keep current key" autocomplete="off"></label><label>Custom / Ollama URL<input id="url" placeholder="http://localhost:1234/v1"></label><div class="actions"><button type="button" id="closeSettings">Close</button><button class="primary">Save connection</button></div></form></dialog>
+<script>
+let token=location.hash.slice(1);try{if(token)sessionStorage.setItem('blenderStudioToken',token);else token=sessionStorage.getItem('blenderStudioToken')||''}catch(e){}history.replaceState(null,'',location.pathname);const $=id=>document.getElementById(id);let previous='',imageUrl='',lastState=null;
+window.addEventListener('hashchange',()=>{const next=location.hash.slice(1);if(next){token=next;try{sessionStorage.setItem('blenderStudioToken',token)}catch(e){}history.replaceState(null,'',location.pathname)}});
+async function api(path,body){if(!token)throw Error('Studio connection is missing. Open Studio Window again from Blender.');const r=await fetch('/api/'+path,{method:body?'POST':'GET',headers:{Authorization:'Bearer '+token,...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});if(!r.ok){let e=await r.json();if(r.status===401)throw Error('Studio session expired. Open Studio Window again from Blender.');throw Error(e.error||r.statusText)}return r}
+function fail(e){$('error').textContent=e.message}
+function element(tag,cls,text){let e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
+async function poll(){try{let s=await(await api('state')).json();lastState=s;$('connection').textContent='Blender connected';$('status').textContent=s.busy?'WORKING':'READY';$('activity').textContent=s.status;$('model').textContent=s.provider+' / '+s.model;$('scene').textContent=s.scene;$('version').textContent='Blender '+s.blender;$('tools').textContent=s.tools+' tools available';$('send').disabled=s.busy;let key=JSON.stringify([s.messages,s.pending]);if(key!==previous){previous=key;if(s.messages.length||s.pending.length){$('messages').replaceChildren();for(let [role,text] of s.messages){let node=element('div','message '+role);node.append(element('div','role',role),element('div','',text));$('messages').append(node)}for(let p of s.pending){let n=element('div','approval');n.append(element('h2','','Permission requested: '+p.name),element('pre','',JSON.stringify(p.arguments,null,2)));for(let [label,allowed] of [['Allow',true],['Reject',false]]){let b=element('button',allowed?'primary':'',label);b.onclick=()=>api('approve',{id:p.id,allowed}).catch(fail);n.append(b)}$('messages').append(n)}$('messages').scrollTop=$('messages').scrollHeight}}$('objects').replaceChildren(...s.objects.map(o=>{let row=element('div','object');row.append(element('span','',o.name),element('small','',o.type));return row}));}catch(e){$('connection').textContent='Connection interrupted';fail(e)}finally{setTimeout(poll,900)}}
+async function viewport(){try{let blob=await(await api('viewport')).blob();if(imageUrl)URL.revokeObjectURL(imageUrl);imageUrl=URL.createObjectURL(blob);$('preview').src=imageUrl;$('preview').hidden=false;$('previewHint').hidden=true}catch(e){$('previewHint').textContent=e.message}finally{setTimeout(viewport,3000)}}
+async function send(){let text=$('input').value.trim();if(!text)return;try{await api('send',{text});$('input').value='';$('error').textContent=''}catch(e){fail(e)}}$('send').onclick=send;$('input').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}};$('cancel').onclick=()=>api('cancel',{}).catch(fail);$('clear').onclick=async()=>{try{await api('clear',{});location.hash=token;location.reload()}catch(e){fail(e)}};$('refresh').onclick=()=>api('viewport').then(r=>r.blob()).then(b=>{$('preview').src=URL.createObjectURL(b)}).catch(fail);
+function settings(){if(lastState){$('provider').value=lastState.provider;$('modelInput').value=lastState.model}$('settings').showModal()}$('settingsButton').onclick=settings;$('settingsNav').onclick=settings;$('closeSettings').onclick=()=>$('settings').close();$('settingsForm').onsubmit=async e=>{e.preventDefault();try{await api('settings',{provider:$('provider').value,model:$('modelInput').value,key:$('key').value,url:$('url').value});$('key').value='';$('settings').close()}catch(e){fail(e)}};document.querySelectorAll('[data-prompt]').forEach(b=>b.onclick=()=>{$('input').value=b.dataset.prompt;$('input').focus()});poll();viewport();
+</script>
+<script>
+const modelInput=$('modelInput');
+const modelList=document.createElement('select');modelList.id='modelList';modelList.setAttribute('aria-label','Available models');
+const loadButton=document.createElement('button');loadButton.type='button';loadButton.textContent='Refresh models';loadButton.id='loadModels';
+const modelStatus=document.createElement('p');modelStatus.id='modelStatus';modelStatus.className='muted';modelStatus.setAttribute('role','status');
+modelInput.before(modelList,loadButton,modelStatus);modelInput.placeholder='Or enter a model ID manually';
+let modelRequest=0,modelTimer;
+function placeholder(text){modelList.replaceChildren(new Option(text,''));modelList.disabled=true}
+async function loadModels(){
+ const request=++modelRequest,kind=$('provider').value;
+ placeholder('Loading models…');modelStatus.textContent='Loading available models from the API…';loadButton.disabled=true;
+ try{
+  const result=await(await api('models',{provider:kind,key:$('key').value,url:$('url').value})).json();
+  if(request!==modelRequest)return;
+  if(!result.models.length){placeholder('No models available');modelStatus.textContent='The API returned no models. You can enter a model ID manually.';return}
+  modelList.replaceChildren(new Option('Select a model…',''),...result.models.map(m=>new Option(m.name===m.id?m.id:m.name+' — '+m.id,m.id)));
+  modelList.disabled=false;modelList.value=modelInput.value;
+  modelStatus.textContent=result.models.length+' models loaded. Availability of tools and images depends on the model.';
+ }catch(e){if(request!==modelRequest)return;placeholder('Could not load models');modelStatus.textContent=e.message}
+ finally{if(request===modelRequest)loadButton.disabled=false}
+}
+modelList.onchange=()=>{if(modelList.value)modelInput.value=modelList.value};
+loadButton.onclick=loadModels;
+function changed(){clearTimeout(modelTimer);++modelRequest;placeholder('Waiting to load…');modelTimer=setTimeout(loadModels,600)}
+$('provider').addEventListener('change',()=>{$('key').value='';$('url').value='';modelInput.value='';changed()});
+$('key').addEventListener('input',changed);$('url').addEventListener('input',changed);
+function openModelSettings(){settings();$('url').value=lastState?.url||'';loadModels()}
+$('settingsButton').onclick=openModelSettings;$('settingsNav').onclick=openModelSettings;
+</script>
+<style>
+:root{--bg:#191a1c;--panel:#222326;--line:#393a3d;--muted:#a6a5a1;--accent:#e8b679}body{font-family:Segoe UI,system-ui,sans-serif}.logo{background:#e8b679;color:#26211b;border-radius:4px}.badge{border-radius:3px;letter-spacing:.6px;color:#c9c7c1}.brand{font-weight:600;letter-spacing:-.4px}header{height:62px;padding:0 22px}main{height:calc(100vh - 62px);grid-template-columns:190px minmax(380px,1fr) minmax(320px,.8fr)}button,input,select,textarea,.card,.viewport,.message{border-radius:5px}button{padding:9px 13px}button.primary{background:#e8b679;color:#211c16}nav{background:#1e1f21;padding:20px 12px}nav .active{background:#33302a;color:#e8b679}.heading{padding:20px 24px}.empty{margin:40px auto}.empty h1{font-size:25px;font-weight:500;letter-spacing:-.4px}.empty p{line-height:1.6}.message.user{background:#302c26;border-color:#494036}.message.tool{background:#1e2022;border-left:2px solid #8d9982}.right{background:#1c1d1f;padding:22px}.card{background:#222326;padding:16px}.section{letter-spacing:1px}dialog{border-radius:7px;width:560px;padding:26px}dialog label{margin-top:14px}.step{color:#e8b679;font-size:12px;text-transform:uppercase;letter-spacing:1px}.composer{padding:16px 24px}.viewport{min-height:220px}.empty .badge{border:0;padding:0}#modelList{margin-top:8px}#loadModels{margin-top:8px}#modelStatus{font-size:12px;line-height:1.5}h2{font-weight:600}.actions small{font-size:11px}@media(max-width:1050px){main{grid-template-columns:70px 1fr 300px}}@media(max-width:780px){main{grid-template-columns:1fr}}
+</style>
+<script>
+document.querySelector('.brand').childNodes[1].textContent=' Scene Desk ';
+document.querySelector('.heading h2').textContent='Scene workspace';
+document.querySelector('.empty h1').innerHTML='Work with your scene.';
+document.querySelector('.empty p').textContent='Choose a connection and model, then describe a change. Operations and their results appear here.';
+document.querySelector('.empty .badge').textContent='BLENDER WORKSPACE';
+document.querySelector('nav .active .label').textContent='Scene chat';
+$('input').placeholder='Describe a change to the scene';
+$('settingsButton').textContent='Connection & model';
+$('settings').querySelector('h2').textContent='Connection & model';
+$('settings').querySelector('p').textContent='1. Choose a service · 2. Load models · 3. Save';
+$('provider').querySelector('[value="custom"]').textContent='Custom API / gateway';
+const protocolLabel=document.createElement('label');protocolLabel.textContent='API protocol';
+const protocolSelect=document.createElement('select');protocolSelect.id='protocol';
+for(const [id,label] of [['openai','OpenAI Chat Completions'],['anthropic','Anthropic Messages'],['ollama','Ollama']])protocolSelect.add(new Option(label,id));
+protocolLabel.append(protocolSelect);$('provider').closest('label').after(protocolLabel);
+function connectionFields(){let custom=$('provider').value==='custom',local=$('provider').value==='ollama';protocolLabel.hidden=!custom;$('url').closest('label').hidden=!(custom||local);$('key').closest('label').hidden=local}
+$('provider').addEventListener('change',connectionFields);
+const originalApi=api;api=async function(path,body){if(body&&(path==='models'||path==='settings'))body.protocol=protocolSelect.value;return originalApi(path,body)};
+protocolSelect.onchange=changed;
+const originalOpen=openModelSettings;openModelSettings=function(){protocolSelect.value=lastState?.protocol||'openai';originalOpen();connectionFields()};
+$('settingsButton').onclick=openModelSettings;$('settingsNav').onclick=openModelSettings;
+connectionFields();
+</script>
+<dialog id="teamDialog" style="width:760px;max-height:85vh;overflow:auto"><h2>Team & workflow</h2><p class="muted">Define responsibilities and models. Managers run first; siblings follow list order.</p><div id="teamList"></div><button id="addAgent">Add agent</button><hr><form id="agentForm"><input id="agentId" type="hidden"><label>Name<input id="agentName" required></label><label>Position / responsibility<input id="agentRole" required></label><label>Reports to<select id="agentParent"></select></label><label>Provider<select id="agentProvider"></select></label><label>Model<input id="agentModel" placeholder="Blank = workspace model"></label><button type="button" id="agentLoad">Load models</button><select id="agentModels" aria-label="Agent models"></select><p id="agentError" class="muted"></p><label>Instructions<textarea id="agentInstructions"></textarea></label><label><input id="agentEnabled" type="checkbox" style="width:auto"> Enabled</label><div class="actions"><button type="button" id="teamClose">Close</button><button class="primary">Save agent</button></div></form></dialog>
+<script>
+const teamButton=element('button','','Team & workflow');document.querySelector('nav').insertBefore(teamButton,document.querySelector('nav footer'));
+const modeSelect=document.createElement('select');modeSelect.id='runMode';modeSelect.style.cssText='width:auto;margin:0 10px 0 0';modeSelect.add(new Option('Single assistant','single'));modeSelect.add(new Option('Team chain','team'));$('send').before(modeSelect);
+const beforeTeamApi=api;api=async function(path,body){if(path==='send')body.team=modeSelect.value==='team';return beforeTeamApi(path,body)};
+function editAgent(a={id:crypto.randomUUID(),name:'',role:'',instructions:'',provider:'',model:'',parent:'',enabled:true}){$('agentId').value=a.id;$('agentName').value=a.name;$('agentRole').value=a.role;$('agentModel').value=a.model;$('agentInstructions').value=a.instructions;$('agentEnabled').checked=a.enabled;$('agentParent').replaceChildren(new Option('No manager',''),...(lastState.agents||[]).filter(x=>x.id!==a.id).map(x=>new Option(x.name+' / '+x.role,x.id)));$('agentParent').value=a.parent;$('agentProvider').replaceChildren(new Option('Use workspace provider',''),...Array.from($('provider').options).map(x=>new Option(x.text,x.value)));$('agentProvider').value=a.provider;$('agentModels').replaceChildren(new Option('Load models…',''));$('agentError').textContent=''}
+function renderTeam(){const list=$('teamList');list.replaceChildren();for(const a of lastState.agents||[]){const row=element('div','card');row.append(element('h2','',a.name+' · '+a.role),element('p','muted',(a.enabled?'Enabled':'Disabled')+' / '+(a.provider||'workspace')+' / '+(a.model||'workspace model')));for(const [label,fn] of [['Edit',()=>editAgent(a)],['↑',async()=>{await api('agent-move',{id:a.id,direction:-1});await refreshTeam()}],['↓',async()=>{await api('agent-move',{id:a.id,direction:1});await refreshTeam()}],['Delete',async()=>{await api('agent-delete',{id:a.id});await refreshTeam()}]]){let b=element('button','',label);b.onclick=()=>Promise.resolve(fn()).catch(e=>$('agentError').textContent=e.message);row.append(b)}list.append(row)}}
+async function refreshTeam(){lastState=await(await api('state')).json();renderTeam()}
+teamButton.onclick=async()=>{try{await refreshTeam();editAgent();$('teamDialog').showModal()}catch(e){fail(e)}};$('addAgent').onclick=()=>editAgent();$('teamClose').onclick=()=>$('teamDialog').close();
+$('agentLoad').onclick=async()=>{try{const provider=$('agentProvider').value||lastState.provider;const data=await(await api('models',{provider})).json();$('agentModels').replaceChildren(new Option('Choose model',''),...data.models.map(m=>new Option(m.id,m.id)));$('agentError').textContent=data.models.length+' models loaded'}catch(e){$('agentError').textContent=e.message}};$('agentModels').onchange=()=>{$('agentModel').value=$('agentModels').value};
+$('agentForm').onsubmit=async e=>{e.preventDefault();try{await api('agent-save',{id:$('agentId').value,name:$('agentName').value,role:$('agentRole').value,parent:$('agentParent').value,provider:$('agentProvider').value,model:$('agentModel').value,instructions:$('agentInstructions').value,enabled:$('agentEnabled').checked});await refreshTeam();$('agentError').textContent='Saved'}catch(e){$('agentError').textContent=e.message}};
+</script>
+<script>
+const languageSelect=document.createElement('select');languageSelect.id='language';languageSelect.setAttribute('aria-label','Language');languageSelect.style.cssText='width:130px;margin:0 12px';for(const [id,name] of [['en','English'],['de','Deutsch'],['fr','Français'],['es','Español'],['zh','中文']])languageSelect.add(new Option(name,id));$('settingsButton').before(languageSelect);
+const translations={
+'Connection & model':['Verbindung & Modell','Connexion et modèle','Conexión y modelo','连接与模型'],
+'Scene workspace':['Szenenarbeitsplatz','Espace de scène','Espacio de escena','场景工作区'],
+'Scene chat':['Szenenchat','Chat de scène','Chat de escena','场景聊天'],
+'New conversation':['Neues Gespräch','Nouvelle conversation','Nueva conversación','新对话'],
+'Refresh viewport':['Ansicht aktualisieren','Actualiser la vue','Actualizar vista','刷新视图'],
+'AI connection':['API-Verbindung','Connexion API','Conexión API','API 连接'],
+'Team & workflow':['Team & Ablauf','Équipe et workflow','Equipo y flujo','团队与工作流'],
+'Work with your scene.':['Arbeiten Sie an Ihrer Szene.','Travaillez sur votre scène.','Trabaja en tu escena.','编辑您的场景。'],
+'Scene preview':['Szenenvorschau','Aperçu de scène','Vista previa','场景预览'],
+'Activity':['Aktivität','Activité','Actividad','活动'],
+'Scene collection':['Szenenobjekte','Objets de scène','Objetos de escena','场景对象'],
+'Stop':['Stoppen','Arrêter','Detener','停止'],
+'Send ↗':['Senden ↗','Envoyer ↗','Enviar ↗','发送 ↗'],
+'Provider':['Anbieter','Fournisseur','Proveedor','提供商'],
+'API protocol':['API-Protokoll','Protocole API','Protocolo API','API 协议'],
+'Model':['Modell','Modèle','Modelo','模型'],
+'API key':['API-Schlüssel','Clé API','Clave API','API 密钥'],
+'Custom / Ollama URL':['API-/Ollama-Adresse','Adresse API / Ollama','Dirección API / Ollama','API / Ollama 地址'],
+'Close':['Schließen','Fermer','Cerrar','关闭'],
+'Save connection':['Verbindung speichern','Enregistrer la connexion','Guardar conexión','保存连接'],
+'Refresh models':['Modelle aktualisieren','Actualiser les modèles','Actualizar modelos','刷新模型'],
+'Single assistant':['Ein Assistent','Un assistant','Un asistente','单个助手'],
+'Team chain':['Agentenkette','Chaîne d’agents','Cadena de agentes','代理链'],
+'Add agent':['Agent hinzufügen','Ajouter un agent','Añadir agente','添加代理'],
+'Name':['Name','Nom','Nombre','名称'],
+'Position / responsibility':['Position / Aufgabe','Poste / responsabilité','Cargo / responsabilidad','职位 / 职责'],
+'Reports to':['Vorgesetzter','Responsable','Superior','上级'],
+'Load models':['Modelle laden','Charger les modèles','Cargar modelos','加载模型'],
+'Instructions':['Anweisungen','Instructions','Instrucciones','指令'],
+'Enabled':['Aktiviert','Activé','Activado','已启用'],
+'Save agent':['Agent speichern','Enregistrer l’agent','Guardar agente','保存代理'],
+'Edit':['Bearbeiten','Modifier','Editar','编辑'],
+'Delete':['Löschen','Supprimer','Eliminar','删除'],
+'Allow':['Erlauben','Autoriser','Permitir','允许'],
+'Reject':['Ablehnen','Refuser','Rechazar','拒绝'],
+'No manager':['Kein Vorgesetzter','Sans responsable','Sin superior','无上级'],
+'Use workspace provider':['Arbeitsbereich-Anbieter','Fournisseur de l’espace','Proveedor del espacio','工作区提供商'],
+'Choose model':['Modell wählen','Choisir un modèle','Elegir modelo','选择模型'],
+'1. Choose a service · 2. Load models · 3. Save':['1. Anbieter · 2. Modelle laden · 3. Speichern','1. Fournisseur · 2. Modèles · 3. Enregistrer','1. Proveedor · 2. Modelos · 3. Guardar','1. 选择服务 · 2. 加载模型 · 3. 保存'],
+'Define responsibilities and models. Managers run first; siblings follow list order.':['Rollen und Modelle festlegen. Vorgesetzte zuerst, dann Listenreihenfolge.','Définissez rôles et modèles. Responsables d’abord, puis ordre de liste.','Define roles y modelos. Superiores primero, después orden de lista.','设置职责和模型。先运行上级，再按列表顺序执行。']};
+const originalText=new WeakMap();let activeLanguage=localStorage.getItem('sceneDeskLanguage')||'en';if(!['en','de','fr','es','zh'].includes(activeLanguage))activeLanguage='en';languageSelect.value=activeLanguage;
+function translateUI(){document.documentElement.lang=activeLanguage;const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){if(node.parentElement.closest('script,style,#messages,#objects,#agentInstructions,textarea'))continue;let source=originalText.get(node)||node.nodeValue.trim();if(!translations[source])continue;originalText.set(node,source);let value=activeLanguage==='en'?source:translations[source][['de','fr','es','zh'].indexOf(activeLanguage)];if(node.nodeValue.trim()!==value)node.nodeValue=value}}
+languageSelect.onchange=()=>{activeLanguage=languageSelect.value;localStorage.setItem('sceneDeskLanguage',activeLanguage);translateUI();api('language',{language:activeLanguage}).catch(fail)};
+setInterval(translateUI,700);translateUI();
+</script>
+<script>
+const kindLabel=document.createElement('label');kindLabel.textContent='Agent function';const kindSelect=document.createElement('select');kindSelect.id='agentKind';for(const [id,name] of [['manager','Manager — assign tasks'],['worker','Worker — execute tasks'],['reviewer','Reviewer — approve or return']])kindSelect.add(new Option(name,id));kindLabel.append(kindSelect);$('agentRole').closest('label').after(kindLabel);
+const editBeforeKind=editAgent;editAgent=function(a){editBeforeKind(a);kindSelect.value=a?.kind||'worker'};
+const apiBeforeKind=api;api=async function(path,body){if(path==='agent-save')body.kind=kindSelect.value;return apiBeforeKind(path,body)};
+const taskBoard=element('div','card');taskBoard.id='taskBoard';document.querySelector('.right').append(taskBoard);let taskSignature='';
+setInterval(()=>{if(!lastState)return;const tasks=lastState.tasks||[];const sig=JSON.stringify(tasks);if(sig===taskSignature)return;taskSignature=sig;taskBoard.replaceChildren(element('h2','','Task board'));for(const task of tasks){const row=element('div','object');row.style.display='block';row.append(element('strong','',task.id+' · '+task.status),element('p','',task.goal),element('small','',task.worker+' · attempt '+task.attempts));if(task.feedback)row.append(element('p','muted',task.feedback));taskBoard.append(row)}},700);
+document.querySelector('#teamDialog > p').textContent='Choose one manager, workers and reviewers. The manager assigns tasks; reviewers approve or return work. Maximum two attempts per task.';
+translations['Agent function']=['Agentenfunktion','Fonction de l’agent','Función del agente','代理功能'];
+translations['Task board']=['Aufgabenübersicht','Tableau des tâches','Tablero de tareas','任务看板'];
+</script>
+<style>.heading{align-items:center}#status{height:auto;align-self:center;padding:5px 9px;white-space:nowrap;line-height:1.2;border:0;background:#30332f}.brand{font-size:16px}.brand .badge{display:none}#profileControls{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin:15px 0}#profileControls select{margin:0}</style>
+<script>
+document.title='mcp-for-blender-pro';document.querySelector('.brand').childNodes[1].textContent=' mcp-for-blender-pro ';
+const profileControls=element('div','');profileControls.id='profileControls';
+const profileSelect=document.createElement('select');profileSelect.id='connectionProfile';profileSelect.setAttribute('aria-label','Saved connection');
+const profileSave=element('button','','Save profile'),profileDelete=element('button','','Delete');profileSave.type=profileDelete.type='button';profileControls.append(profileSelect,profileSave,profileDelete);$('settingsForm').before(profileControls);
+function showProfiles(){profileSelect.replaceChildren(new Option('Saved connections…',''),...(lastState?.profiles||[]).map(p=>new Option(p.name+' / '+p.provider,p.id)))}
+const openBeforeProfiles=openModelSettings;openModelSettings=function(){showProfiles();openBeforeProfiles()};$('settingsButton').onclick=openModelSettings;$('settingsNav').onclick=openModelSettings;
+profileSelect.onchange=async()=>{if(!profileSelect.value)return;try{await api('profile-use',{id:profileSelect.value});lastState=await(await api('state')).json();$('key').value='';$('provider').value=lastState.provider;$('modelInput').value=lastState.model;$('url').value=lastState.url||'';protocolSelect.value=lastState.protocol||'openai';connectionFields();loadModels()}catch(e){modelStatus.textContent=e.message}};
+profileSave.onclick=async()=>{const name=prompt('Connection name (Work key / Personal key)');if(!name)return;try{await api('settings',{provider:$('provider').value,model:$('modelInput').value,key:$('key').value,url:$('url').value});await api('profile-save',{name});$('key').value='';lastState=await(await api('state')).json();showProfiles();modelStatus.textContent='Connection saved'}catch(e){modelStatus.textContent=e.message}};
+profileDelete.onclick=async()=>{if(!profileSelect.value)return;try{await api('profile-delete',{id:profileSelect.value});lastState=await(await api('state')).json();showProfiles()}catch(e){modelStatus.textContent=e.message}};
+</script>
+<style>.nav-group{color:var(--muted);font-size:11px;letter-spacing:.08em;margin:22px 10px 8px}.right #taskBoard:has(>h2:only-child){display:none}.chat .heading #status{font-size:11px;line-height:1;padding:6px 9px;min-height:0;height:auto}</style>
+<script>
+const menu=document.querySelector('nav');
+const activityHeading=element('div','nav-group','CHAT');
+menu.insertBefore(activityHeading,document.querySelector('nav button'));
+const sceneHeading=element('div','nav-group','SCENE');
+menu.insertBefore(sceneHeading,$('refresh'));
+const toolsHeading=element('div','nav-group','TOOLS & CONNECTIONS');
+menu.insertBefore(toolsHeading,$('settingsNav'));
+menu.querySelector('.section')?.remove();
+document.querySelector('.heading h2').textContent='Conversation';
+document.querySelector('.empty h1').textContent='What are we making?';
+document.querySelector('.empty p').textContent='Describe a change, follow each operation and check the result in the scene preview.';
+document.querySelector('nav .active .label').textContent='Chat';
+document.querySelector('nav footer').textContent='Use Connection & model to choose a provider. Set up a team only when you need task delegation.';
+Object.assign(translations,{
+'Conversation':['Gespräch','Conversation','Conversación','对话'],
+'What are we making?':['Was erstellen wir?','Que créons-nous ?','¿Qué creamos?','我们要制作什么？'],
+'Chat':['Chat','Chat','Chat','聊天'],
+'SCENE':['SZENE','SCÈNE','ESCENA','场景'],
+'TOOLS & CONNECTIONS':['WERKZEUGE & VERBINDUNGEN','OUTILS & CONNEXIONS','HERRAMIENTAS Y CONEXIONES','工具与连接']
+});
+translateUI();
+</script></html>
